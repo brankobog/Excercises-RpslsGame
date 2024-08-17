@@ -1,5 +1,5 @@
-
-using RpslsGame.GameService.Values.Choice;
+using RpslsGame.GameService.Choices;
+using RpslsGame.GameService.Randomness;
 
 namespace RpslsGame.GameService;
 

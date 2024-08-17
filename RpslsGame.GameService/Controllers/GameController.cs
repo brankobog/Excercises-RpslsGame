@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using RpslsGame.GameService.Values.Choice;
+using RpslsGame.GameService.Choices;
+using RpslsGame.GameService.Games;
 
 namespace RpslsGame.GameService.Controllers;
 
@@ -9,9 +10,6 @@ public class GameController (
     ILogger<GameController> logger,
     IRandomChoiceFactory randomChoiceFactory) : ControllerBase
 {
-    private static readonly string[] Choices =
-        ["Rock", "Paper", "Scissors", "Lizard", "Spock"];
-
     [HttpGet()]
     [Route("choice")]
     public ChoiceDto GetChoice()
@@ -35,11 +33,20 @@ public class GameController (
 
     [HttpPost()]
     [Route("play")]
-    public IActionResult PostPlay([FromBody] int playerChoice)
+    public PlayResultDto PostPlay([FromBody] PlayerChoiceDto body)
     {
         logger.LogInformation("POST Play called");
+        
+        var playerChoice = Choice.CreateChoice(body.Player);
+        logger.LogInformation("Player choice: {playerChoice}", playerChoice);
+        
+        var computerChoice = randomChoiceFactory.CreateRandomChoice();
+        logger.LogInformation("Computer choice: {computerChoice}", computerChoice);
 
-        return Ok();
+        var result = new Game(playerChoice, computerChoice).Result;
+        logger.LogInformation("GameResult: {result}", result.ToString());
+
+        return new PlayResultDto(result.ToString(), playerChoice.Id, computerChoice.Id);
     }
 }
 

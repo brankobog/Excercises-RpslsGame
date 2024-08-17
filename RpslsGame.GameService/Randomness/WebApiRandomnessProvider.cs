@@ -1,4 +1,4 @@
-﻿namespace RpslsGame.GameService.Values.Choice;
+﻿namespace RpslsGame.GameService.Randomness;
 
 using System.Text.Json.Serialization;
 using ArgumentGuard = ArgumentOutOfRangeException;
@@ -34,9 +34,9 @@ public class WebRandomnessProvider(
         return Normalize(response.Value, minValue, maxValue);
     }
 
-    public int Next(int minValue, int maxValue) => 
+    public int Next(int minValue, int maxValue) =>
         NextAsync(minValue, maxValue).Result;
 
-    public static int Normalize(int value, int MinNew, int MaxNew) => 
-        MinNew + ((value - MinRnd) * (MaxNew - MinNew) / (MaxRnd - MinRnd));
+    public static int Normalize(int value, int MinNew, int MaxNew) =>
+        MinNew + (value - MinRnd) * (MaxNew - MinNew) / (MaxRnd - MinRnd);
 }
