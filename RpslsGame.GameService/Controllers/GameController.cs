@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Games;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RpslsGame.GameService.Controllers;
 
@@ -12,6 +13,11 @@ public class GameController (
 {
     [HttpGet()]
     [Route("choice")]
+    [SwaggerOperation(
+        Summary = "Get a randomly generated choice", 
+        Description = "Returns a randomly generated choice out of all the possible choices."
+    )]
+    [SwaggerResponse(200, "A randomly generated choice", typeof(ChoiceDto))]
     public ChoiceDto GetChoice()
     {
         logger.LogInformation("GET Choice called");
@@ -23,6 +29,11 @@ public class GameController (
 
     [HttpGet()]
     [Route("choices")]
+    [SwaggerOperation(
+        Summary = "Get all the choices that are usable for the UI", 
+        Description = "Returns a list of all allowed choices."
+    )]
+    [SwaggerResponse(200, "A list of all allowed choices", typeof(IEnumerable<ChoiceDto>))]
     public IEnumerable<ChoiceDto> GetChoices()
     {
         logger.LogInformation("GET Choices called");
@@ -33,6 +44,11 @@ public class GameController (
 
     [HttpPost()]
     [Route("play")]
+    [SwaggerOperation(
+        Summary = "Play a round against a computer opponent", 
+        Description = "Plays a round against a computer opponent and returns the result."
+    )]
+    [SwaggerResponse(200, "Result of the round played versus a computer opponent", typeof(PlayResultDto))]
     public PlayResultDto PostPlay([FromBody] PlayerChoiceDto body)
     {
         logger.LogInformation("POST Play called");
