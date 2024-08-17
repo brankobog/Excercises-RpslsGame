@@ -1,4 +1,4 @@
-﻿namespace RpslsGame.GameService.Values;
+﻿namespace RpslsGame.GameService.Values.Choice;
 
 public class Choice
 {

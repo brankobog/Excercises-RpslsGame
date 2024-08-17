@@ -1,4 +1,6 @@
 
+using RpslsGame.GameService.Values.Choice;
+
 namespace RpslsGame.GameService;
 
 public class Program
@@ -8,7 +10,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
 
-        // Add services to the container.
+        builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
+        builder.Services.AddTransient<IRandomChoiceFactory, RandomChoiceFactory>();
 
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
         builder.Services.AddControllers();

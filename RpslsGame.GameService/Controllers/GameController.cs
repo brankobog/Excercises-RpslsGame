@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using RpslsGame.GameService.Values;
+using RpslsGame.GameService.Values.Choice;
 
 namespace RpslsGame.GameService.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController (ILogger<GameController> logger) : ControllerBase
+public class GameController (
+    ILogger<GameController> logger,
+    IRandomChoiceFactory randomChoiceFactory) : ControllerBase
 {
     private static readonly string[] Choices =
         ["Rock", "Paper", "Scissors", "Lizard", "Spock"];
@@ -15,7 +17,7 @@ public class GameController (ILogger<GameController> logger) : ControllerBase
     public ChoiceDto GetChoice()
     {
         logger.LogInformation("GET Choice called");
-        var choice = Choice.CreateChoice(Random.Shared.Next(0, 5));
+        var choice = randomChoiceFactory.CreateRandomChoice();
 
         logger.LogInformation("Choice: {choice} returned.", choice);
         return new ChoiceDto(choice.Id, choice.Name);
