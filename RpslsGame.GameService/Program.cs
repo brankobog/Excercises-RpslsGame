@@ -10,7 +10,14 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
 
-        builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
+        //builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
+        //builder.Services.AddTransient<IRandomnessProvider, WebRandomnessProvider>();
+
+        builder.Services.AddHttpClient<IRandomnessProvider, WebRandomnessProvider>(client =>
+        {
+            client.BaseAddress = new Uri("https://codechallenge.boohma.com/");
+        });
+
         builder.Services.AddTransient<IRandomChoiceFactory, RandomChoiceFactory>();
 
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
