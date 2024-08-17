@@ -1,4 +1,5 @@
 using RpslsGame.GameService.Choices;
+using RpslsGame.GameService.Configuration;
 using RpslsGame.GameService.Randomness;
 
 namespace RpslsGame.GameService;
@@ -38,12 +39,12 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
-
+        
         app.Run();
     }
 }

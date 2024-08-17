@@ -22,6 +22,7 @@ public class WebRandomnessProvider(
         ArgumentGuard.ThrowIfNegative(maxValue);
         ArgumentGuard.ThrowIfGreaterThanOrEqual(minValue, maxValue);
 
+
         var response = await httpClient.GetFromJsonAsync<RandomResponse>($"random");
 
         if (response is null)

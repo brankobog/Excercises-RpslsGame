@@ -2,19 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Games;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace RpslsGame.GameService.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController (
+public class GameController(
     ILogger<GameController> logger,
     IRandomChoiceFactory randomChoiceFactory) : ControllerBase
 {
     [HttpGet()]
     [Route("choice")]
     [SwaggerOperation(
-        Summary = "Get a randomly generated choice", 
+        Summary = "Get a randomly generated choice",
         Description = "Returns a randomly generated choice out of all the possible choices."
     )]
     [SwaggerResponse(200, "A randomly generated choice", typeof(ChoiceDto))]
@@ -30,7 +31,7 @@ public class GameController (
     [HttpGet()]
     [Route("choices")]
     [SwaggerOperation(
-        Summary = "Get all the choices that are usable for the UI", 
+        Summary = "Get all the choices that are usable for the UI",
         Description = "Returns a list of all allowed choices."
     )]
     [SwaggerResponse(200, "A list of all allowed choices", typeof(IEnumerable<ChoiceDto>))]
@@ -45,10 +46,11 @@ public class GameController (
     [HttpPost()]
     [Route("play")]
     [SwaggerOperation(
-        Summary = "Play a round against a computer opponent", 
+        Summary = "Play a round against a computer opponent",
         Description = "Plays a round against a computer opponent and returns the result."
     )]
     [SwaggerResponse(200, "Result of the round played versus a computer opponent", typeof(PlayResultDto))]
+    [SwaggerResponse(400, "Choice validation error")]
     public PlayResultDto PostPlay([FromBody] PlayerChoiceDto body)
     {
         logger.LogInformation("POST Play called");
@@ -67,5 +69,10 @@ public class GameController (
 }
 
 public record ChoiceDto(int Id, string Name);
-public record PlayerChoiceDto(int Player);
 public record PlayResultDto(string Results, int Player, int Computer);
+public record PlayerChoiceDto
+{
+    [Required]
+    [Range(0, 4, ErrorMessage = "Choice is not allowed, choice id is out of bounds.")]
+    public int Player { get; init; }
+}
