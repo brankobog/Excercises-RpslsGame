@@ -1,17 +1,17 @@
 ﻿using StackExchange.Redis;
-using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RpslsGame.GameService.Redis;
 
 public interface ILeaderboardService
 {
     Task<LeaderboardScore?> GetScoreAsync(string key);
-    Task<IEnumerable<LeaderboardScore>> GetRange(int start, int end, bool isDesc);
+    Task<IEnumerable<LeaderboardScore>> GetRange(int start, int end);
     Task IncrementScoreAsync(string key);
     Task ClearAsync();
 }
 
-public record LeaderboardScore(string Name, int Score);
+public record LeaderboardScore(string Name, int Score, int Rank = -1);
 
 public class RedisLeaderboardService(IConnectionMultiplexer redis) : ILeaderboardService
 {
@@ -31,9 +31,20 @@ public class RedisLeaderboardService(IConnectionMultiplexer redis) : ILeaderboar
         await _database.SortedSetIncrementAsync("leaderboard", key, 1.0);
     }
 
-    public Task<IEnumerable<LeaderboardScore>> GetRange(int start, int end, bool isDesc)
+    public async Task<IEnumerable<LeaderboardScore>> GetRange(int start, int end)
     {
-        throw new NotImplementedException();
+        var results = await _database.SortedSetRangeByRankWithScoresAsync("leaderboard", start, end, Order.Descending);
+        if (results == null)
+        {
+            return [];
+        }
+        var data = results.Select((item, index) => new LeaderboardScore(
+            Name: item.Element.ToString(),
+            Score: (int)item.Score,
+            Rank: start + 1 + index
+        ));
+
+        return data;
     }
 
     public async Task ClearAsync()

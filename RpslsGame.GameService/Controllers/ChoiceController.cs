@@ -6,8 +6,8 @@ namespace RpslsGame.GameService.Controllers;
 
 [ApiController]
 public class ChoiceController(
-    ILogger<GameController> logger,
-    IRandomChoiceFactory randomChoiceFactory) : ControllerBase
+    IRandomChoiceFactory randomChoiceFactory,
+    ILogger<GameController> logger) : ControllerBase
 {
     [HttpGet("choice")]
     [SwaggerOperation(
@@ -15,10 +15,10 @@ public class ChoiceController(
         Description = "Returns a randomly generated choice out of all the possible choices."
     )]
     [SwaggerResponse(200, "A randomly generated choice", typeof(ChoiceDto))]
-    public ChoiceDto GetChoice()
+    public async Task<ChoiceDto> GetChoiceAsync()
     {
         logger.LogInformation("GET Choice called");
-        var choice = randomChoiceFactory.CreateRandomChoice();
+        var choice = await randomChoiceFactory.CreateRandomChoiceAsync();
 
         logger.LogInformation("Choice: {choice} returned.", choice);
         return new ChoiceDto(choice.Id, choice.Name);

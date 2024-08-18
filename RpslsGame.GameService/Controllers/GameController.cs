@@ -9,9 +9,9 @@ namespace RpslsGame.GameService.Controllers;
 
 [ApiController]
 public class GameController(
-    ILogger<GameController> logger,
     IRandomChoiceFactory randomChoiceFactory,
-    ILeaderboardService leaderboard) : ControllerBase
+    ILeaderboardService leaderboard,
+    ILogger<GameController> logger) : ControllerBase
 {
     [HttpPost("play")]
     [SwaggerOperation(
@@ -20,7 +20,7 @@ public class GameController(
     )]
     [SwaggerResponse(200, "Result of the round played versus a computer opponent", typeof(PlayResultDto))]
     [SwaggerResponse(400, "Choice validation error")]
-    public PlayResultDto PostPlay([FromBody] PlayerChoiceDto body)
+    public async Task<PlayResultDto> PostPlay([FromBody] PlayerChoiceDto body)
     {
         logger.LogInformation("POST Play called");
 
@@ -30,7 +30,7 @@ public class GameController(
         var playerChoice = Choice.CreateChoice(body.Player);
         logger.LogInformation("Player choice: {playerChoice}", playerChoice.Name);
         
-        var computerChoice = randomChoiceFactory.CreateRandomChoice();
+        var computerChoice = await randomChoiceFactory.CreateRandomChoiceAsync();
         logger.LogInformation("Computer choice: {computerChoice}", computerChoice.Name);
 
         var result = new Game(playerChoice, computerChoice).Result;
@@ -38,7 +38,7 @@ public class GameController(
 
         if (userId != null && result == GameResult.Win)
         {
-            leaderboard.IncrementScoreAsync(userId.ToString());
+            await leaderboard.IncrementScoreAsync(userId.ToString());
         }
 
         return new PlayResultDto(result.ToString(), playerChoice.Id, computerChoice.Id);

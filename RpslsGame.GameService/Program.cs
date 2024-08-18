@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Configuration;
 using RpslsGame.GameService.Randomness;
@@ -11,7 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
-        builder.AddRedisClient("redis");
+        builder.AddRedisClient("redis", configureOptions: options => options.AllowAdmin = true);
 
         //builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
         //builder.Services.AddTransient<IRandomnessProvider, WebRandomnessProvider>();
@@ -26,7 +27,7 @@ public class Program
         builder.Services.AddTransient<IRandomChoiceFactory, RandomChoiceFactory>();
 
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
-        builder.Services.AddControllers(); 
+        builder.Services.AddControllers();
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
@@ -34,10 +35,18 @@ public class Program
             options.Cookie.Name = "RpslsGame.Session";
             options.Cookie.IsEssential = true;
         });
+        builder.Services.AddAuthentication("ApiKey")
+            .AddScheme<ApiKeyAuthenticationSchemeOptions, ApiKeyAuthenticationSchemeHandler>(
+                "ApiKey",
+                options => options.ValidApiKey = "admin" // TODO: Move to secret manager
+        );
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.EnableAnnotations();
+        });
 
         var app = builder.Build();
 
@@ -56,6 +65,7 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
         app.UseSession();
+        app.UseAuthorization();
         
         app.Run();
     }
