@@ -20,7 +20,7 @@ public class LeaderboardController(
     public async Task<IEnumerable<LeaderboardEntryDto>> GetLeaderboardAsync()
     {
         logger.LogInformation("GET Leaderboard called");
-        var scores = await leaderboard.GetRange(0, 5);
+        var scores = await leaderboard.GetRange(0, 10);
 
         return scores.Select(score =>
             new LeaderboardEntryDto(score.Name, score.Score, score.Rank)
