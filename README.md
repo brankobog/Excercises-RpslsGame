@@ -9,4 +9,4 @@ Bonus requirements developed include a Redis-based leaderboard that can be reset
 
 If using Visual Studio, open the solution file RpslsGame.sln and launch/debug the AspireShop.AppHost project.
 
-If using the .NET CLI, run dotnet run from the RpslsGame.AppHost directory.
+If using the .NET CLI, run `dotnet run` from the RpslsGame.AppHost directory.
