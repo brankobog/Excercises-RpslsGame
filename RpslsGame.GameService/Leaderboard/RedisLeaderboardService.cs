@@ -1,15 +1,6 @@
 ﻿using StackExchange.Redis;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RpslsGame.GameService.Redis;
-
-public interface ILeaderboardService
-{
-    Task<LeaderboardScore?> GetScoreAsync(string key);
-    Task<IEnumerable<LeaderboardScore>> GetRange(int start, int end);
-    Task IncrementScoreAsync(string key);
-    Task ClearAsync();
-}
 
 public record LeaderboardScore(string Name, int Score, int Rank = -1);
 

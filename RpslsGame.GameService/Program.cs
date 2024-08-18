@@ -3,6 +3,7 @@ using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Configuration;
 using RpslsGame.GameService.Randomness;
 using RpslsGame.GameService.Redis;
+//using Swashbuckle.AspNetCore.Filters;
 
 namespace RpslsGame.GameService;
 
@@ -14,12 +15,9 @@ public class Program
         builder.AddServiceDefaults();
         builder.AddRedisClient("redis", configureOptions: options => options.AllowAdmin = true);
 
-        //builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
-        //builder.Services.AddTransient<IRandomnessProvider, WebRandomnessProvider>();
-
         builder.Services.AddHttpClient<IRandomnessProvider, WebRandomnessProvider>(client =>
         {
-            client.BaseAddress = new Uri("https://codechallenge.boohma.com/");
+            client.BaseAddress = new Uri("https://codechallenge.boohma.com/"); // TODO: Move to configuration
         });
 
         builder.Services.AddTransient<ILeaderboardService, RedisLeaderboardService>();
@@ -38,7 +36,7 @@ public class Program
         builder.Services.AddAuthentication("ApiKey")
             .AddScheme<ApiKeyAuthenticationSchemeOptions, ApiKeyAuthenticationSchemeHandler>(
                 "ApiKey",
-                options => options.ValidApiKey = "admin" // TODO: Move to secret manager
+                options => options.ValidApiKey = "admin-key" // TODO: Move to secret manager
         );
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -46,6 +44,16 @@ public class Program
         builder.Services.AddSwaggerGen(options =>
         {
             options.EnableAnnotations();
+            options.AddSecurityDefinition("ApiKey",
+                new OpenApiSecurityScheme
+                {
+                    Name = "X-Api-Key",
+                    Description = "Simle API Key Authentication for demonstration purposes. Example api key: admin-key",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "ApiKey"
+                });
+            options.OperationFilter<ApiKeyAuthenticationOperationFilter>();
         });
 
         var app = builder.Build();

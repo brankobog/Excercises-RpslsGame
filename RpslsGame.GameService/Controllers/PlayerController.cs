@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -9,13 +8,11 @@ public class PlayerController(
     ILogger<PlayerController> logger) : ControllerBase
 {
     public static readonly string SessionKey = "playerId";
-
     private const string AnonName = "Anonymous";
 
-    [HttpPost()]
-    [Route("name")]
+    [HttpPost("name")]
     [SwaggerOperation(
-        Summary = "Set a the current players name"
+        Summary = "Set the current players name"
     )]
     [SwaggerResponse(200, "A randomly generated choice", typeof(ChoiceDto))]
     public PlayerIdDto PostPlayerName(string name)
