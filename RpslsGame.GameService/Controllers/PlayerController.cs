@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -28,7 +29,7 @@ public class PlayerController(
             $"{name.Trim()}_{id}" : 
             $"{AnonName}_{id}";
         
-        HttpContext.Session.SetInt32(SessionKey, id);
+        HttpContext.Session.SetString(SessionKey, name);
 
         logger.LogInformation("Saved Player: {name}", name);
 

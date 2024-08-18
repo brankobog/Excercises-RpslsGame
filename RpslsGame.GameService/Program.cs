@@ -1,6 +1,7 @@
 using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Configuration;
 using RpslsGame.GameService.Randomness;
+using RpslsGame.GameService.Redis;
 
 namespace RpslsGame.GameService;
 
@@ -10,6 +11,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
+        builder.AddRedisClient("redis");
 
         //builder.Services.AddTransient<IRandomnessProvider, SystemRandomnessProvider>();
         //builder.Services.AddTransient<IRandomnessProvider, WebRandomnessProvider>();
@@ -18,6 +20,8 @@ public class Program
         {
             client.BaseAddress = new Uri("https://codechallenge.boohma.com/");
         });
+
+        builder.Services.AddTransient<ILeaderboardService, RedisLeaderboardService>();
 
         builder.Services.AddTransient<IRandomChoiceFactory, RandomChoiceFactory>();
 

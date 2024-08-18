@@ -1,5 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.RpslsGame_GameService>("rpslsgame-gameservice");
+var redis = builder.AddRedis("redis")
+    .WithRedisCommander();
+
+builder.AddProject<Projects.RpslsGame_GameService>("rpslsgame-gameservice")
+    .WithReference(redis);
 
 builder.Build().Run();

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RpslsGame.GameService.Choices;
 using RpslsGame.GameService.Games;
+using RpslsGame.GameService.Redis;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,8 @@ namespace RpslsGame.GameService.Controllers;
 [ApiController]
 public class GameController(
     ILogger<GameController> logger,
-    IRandomChoiceFactory randomChoiceFactory) : ControllerBase
+    IRandomChoiceFactory randomChoiceFactory,
+    ILeaderboardService leaderboard) : ControllerBase
 {
     [HttpPost("play")]
     [SwaggerOperation(
@@ -22,7 +24,7 @@ public class GameController(
     {
         logger.LogInformation("POST Play called");
 
-        int? userId = HttpContext.Session.GetInt32(PlayerController.SessionKey) ?? -1;
+        string? userId = HttpContext.Session.GetString(PlayerController.SessionKey);
         logger.LogInformation("Player id :{userId}", userId);
 
         var playerChoice = Choice.CreateChoice(body.Player);
@@ -33,6 +35,11 @@ public class GameController(
 
         var result = new Game(playerChoice, computerChoice).Result;
         logger.LogInformation("GameResult: {result}", result.ToString());
+
+        if (userId != null && result == GameResult.Win)
+        {
+            leaderboard.IncrementScoreAsync(userId.ToString());
+        }
 
         return new PlayResultDto(result.ToString(), playerChoice.Id, computerChoice.Id);
     }
