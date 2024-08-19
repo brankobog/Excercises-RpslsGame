@@ -14,7 +14,7 @@ public class LeaderboardController(
     [HttpGet("leaderboard")]
     [SwaggerOperation(
         Summary = "Get leaderboard",
-        Description = "Get the top 5 players on the leaderboard"
+        Description = "Get the top 10 players on the leaderboard"
     )]
     [SwaggerResponse(200, "The leaderboard", typeof(ChoiceDto))]
     public async Task<IEnumerable<LeaderboardEntryDto>> GetLeaderboardAsync()
