@@ -2,11 +2,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpslsGame.AppHost", "RpslsGame.AppHost\RpslsGame.AppHost.csproj", "{62E16136-BE72-47AA-ACCC-96EE652D4FC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpslsGame.AppHost", "RpslsGame.AppHost\RpslsGame.AppHost.csproj", "{62E16136-BE72-47AA-ACCC-96EE652D4FC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpslsGame.ServiceDefaults", "RpslsGame.ServiceDefaults\RpslsGame.ServiceDefaults.csproj", "{60A57D55-90F4-4A89-850B-1E9CF86E9F56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpslsGame.GameService", "RpslsGame.GameService\RpslsGame.GameService.csproj", "{C97D1763-2580-4EF7-BC4D-4521EC380E38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7F207E74-6F54-4CEE-AA4B-D5B2247D700D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RplsGame.GameService.Tests", "RplsGame.GameService.Tests\RplsGame.GameService.Tests.csproj", "{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +30,16 @@ Global
 		{C97D1763-2580-4EF7-BC4D-4521EC380E38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C97D1763-2580-4EF7-BC4D-4521EC380E38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C97D1763-2580-4EF7-BC4D-4521EC380E38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF93DF2A-9F99-44CA-A9CE-AD5C1794DD69} = {7F207E74-6F54-4CEE-AA4B-D5B2247D700D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B58ECEA8-D2FA-4642-AC9A-9632F527CC7D}
